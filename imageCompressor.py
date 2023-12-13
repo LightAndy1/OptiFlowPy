@@ -1,23 +1,48 @@
 import os
 import tkinter as tk
 from tkinter import filedialog
-from PIL import Image
+from PIL import Image, ImageSequence
+import imageio
+import shutil
 
 
-def compress_images(input_folder, output_folder, file_size_limit_kb):
+def compress_images(input_folder, output_folder, target_size_mb):
     # Check if the output folder exists, create if not
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    for filename in os.listdir(input_folder):
-        if filename.lower().endswith((".png", ".jpg", ".jpeg")):
-            input_path = os.path.join(input_folder, filename)
-            output_path = os.path.join(output_folder, filename)
+    for root, dirs, files in os.walk(input_folder):
+        for filename in files:
+            input_path = os.path.join(root, filename)
+            relative_path = os.path.relpath(input_path, input_folder)
+            output_path = os.path.join(output_folder, relative_path)
 
-            with Image.open(input_path) as img:
-                img.save(output_path, quality=file_size_limit_kb)
+            if not os.path.exists(os.path.dirname(output_path)):
+                os.makedirs(os.path.dirname(output_path))
+
+            compress_single_image(input_path, output_path, target_size_mb)
 
     print(f"Image compression completed. Output folder: {output_folder}")
+
+
+def compress_single_image(input_path, output_path, target_size_mb):
+    try:
+        with Image.open(input_path) as img:
+            # Calculate the compression ratio based on the desired output file size
+            compression_ratio = target_size_mb / (
+                os.path.getsize(input_path) / (1024 * 1024)
+            )
+
+            # Save as a temporary file with reduced quality and adjusted compression ratio
+            temp_path, temp_extension = os.path.splitext(output_path)
+            temp_path += "_temp" + temp_extension
+            img.save(temp_path, quality=int(85 * compression_ratio))
+
+            # Move the temporary file to the final output path
+            shutil.move(temp_path, output_path)
+
+    except Exception as e:
+        print(f"Error compressing {input_path}: {e}")
 
 
 def select_folder():
@@ -33,14 +58,14 @@ def select_folder():
 def start_processing():
     input_folder = entry_folder.get()
     output_folder = entry_output_folder.get()
-    file_size_limit_kb = int(slider_file_size.get())
+    target_size_mb = float(entry_target_size.get())
 
-    compress_images(input_folder, output_folder, file_size_limit_kb)
+    compress_images(input_folder, output_folder, target_size_mb)
 
 
 # Create the main window
 root = tk.Tk()
-root.title("Image Compressor")
+root.title("Advanced Image Compressor")
 
 # Input Folder
 label_folder = tk.Label(root, text="Select Input Folder:")
@@ -59,19 +84,19 @@ label_output_folder.pack()
 entry_output_folder = tk.Entry(root, width=50)
 entry_output_folder.pack()
 
-# File Size Limit Slider
-label_file_size = tk.Label(root, text="Set File Size Limit (KB):")
-label_file_size.pack()
+# Target Size Entry
+label_target_size = tk.Label(root, text="Enter Target Output Size (MB):")
+label_target_size.pack()
 
-slider_file_size = tk.Scale(root, from_=1, to=100, orient=tk.HORIZONTAL)
-slider_file_size.pack()
+entry_target_size = tk.Entry(root)
+entry_target_size.pack()
 
 # Buttons
 btn_enter = tk.Button(root, text="Enter", command=start_processing)
 btn_enter.pack()
 
 btn_go_to_folder = tk.Button(
-    root, text="Go to Folder", command=lambda: os.startfile(entry_output_folder.get())
+    root, text="Go to Folder", command=lambda: os.startfile(entry_folder.get())
 )
 btn_go_to_folder.pack()
 
