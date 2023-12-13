@@ -71,7 +71,7 @@ btn_enter = tk.Button(root, text="Enter", command=start_processing)
 btn_enter.pack()
 
 btn_go_to_folder = tk.Button(
-    root, text="Go to Folder", command=lambda: os.startfile(entry_folder.get())
+    root, text="Go to Folder", command=lambda: os.startfile(entry_output_folder.get())
 )
 btn_go_to_folder.pack()
 
