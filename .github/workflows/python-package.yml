@@ -73,4 +73,4 @@ jobs:
           tag_name: "v1"
           target_commitish: ${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: OptiFlowPy v1.0.2
+          name: OptiFlowPy v1.0.3
