@@ -1,5 +1,8 @@
 name: Python Package CI
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -57,7 +60,8 @@ jobs:
           pyinstaller --onefile --name OptiFlowPy --noconsole --icon=assets/icon.png src/main.py
 
       - name: Create Release
-        if: matrix.python-version == '3.9' && startsWith(github.ref, 'refs/tags/')
+        if: matrix.python-version == '3.9'
         uses: softprops/action-gh-release@v1
         with:
           files: dist/OptiFlowPy.exe
+          token: ${{ secrets.GITHUB_TOKEN }}
