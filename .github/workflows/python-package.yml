@@ -69,6 +69,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: dist/OptiFlowPy.exe
-          tag_name: ${{ env.TAG }}
+          tag_name: ""
+          target_commitish: ${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           name: OptiFlowPy v1.0.2
