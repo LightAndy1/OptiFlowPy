@@ -8,7 +8,7 @@ setup(
     description="An advanced batch image compressor.",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    install_requires=["imageio", "numpy", "Pillow", "PyQt5", "tk", "pytest"],
+    install_requires=["imageio", "numpy", "Pillow", "PyQt5", "tk", "pytest", "wheel"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
