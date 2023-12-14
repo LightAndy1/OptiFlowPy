@@ -67,5 +67,4 @@ jobs:
         with:
           files: dist/OptiFlowPy.exe
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref }}
-          tag_name: ${{ github.ref }}
+          tag: v1.0.2
