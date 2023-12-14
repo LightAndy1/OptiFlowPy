@@ -2,7 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name="OptiFlowPy",
-    version="1.0.2",
+    version="1.0.3",
+    url="https://github.com/LightAndy/OptiFlowPy",
+    license="MIT",
     author="Light Andy",
     author_email="andy197197@example.com",
     description="An advanced batch image compressor.",
@@ -11,7 +13,7 @@ setup(
     install_requires=["imageio", "numpy", "Pillow", "PyQt5", "tk", "pytest", "wheel"],
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "Intended Audience :: Developers",
+        "Intended Audience :: Windows Users",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
