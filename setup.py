@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="OptiFlowPy",
-    version="1.0",
+    version="1.0.1",
     author="Light Andy",
     author_email="andy197197@example.com",
     description="An advanced batch image compressor.",
