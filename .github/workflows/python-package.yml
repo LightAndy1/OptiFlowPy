@@ -61,8 +61,9 @@ jobs:
           python -m pip install pyinstaller
           pyinstaller --onefile --name OptiFlowPy --noconsole --icon=assets/icon.png src/main.py
 
-      - name: Debug
-        run: echo "Tag ${{ github.ref }}"
+      - name: Extract tag name
+        id: extract_tag
+        run: echo "::set-output name=tag::$(echo ${{ github.ref}} | awk -F/ '{print $3}')"
 
       - name: Create Release
         if: matrix.python-version == '3.9'
@@ -70,3 +71,4 @@ jobs:
         with:
           files: dist/OptiFlowPy.exe
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.extract_tag.outputs.tag }}
