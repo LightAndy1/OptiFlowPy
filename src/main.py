@@ -2,7 +2,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
-from compressor import compress_image
+from src.compressor import compress_image
 
 
 class OptiFlowPyApp:
