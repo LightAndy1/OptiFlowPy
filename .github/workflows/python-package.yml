@@ -39,6 +39,12 @@ jobs:
         run: |
           python -m pytest tests/
 
+      - name: Build .exe File
+        if: matrix.python-version == '3.9'
+        run: |
+          python -m pip install pyinstaller
+          pyinstaller --onefile src/main.py --name OptiFlowPy1.0.1
+
       - name: Build and Publish Package
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -52,6 +58,8 @@ jobs:
       - name: Create Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
+        with:
+          files: dist/OptiFlowPy1.0.1.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: v1.0.1
