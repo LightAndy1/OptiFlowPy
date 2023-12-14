@@ -13,7 +13,7 @@ setup(
     install_requires=["imageio", "numpy", "Pillow", "PyQt5", "tk", "pytest", "wheel"],
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "Intended Audience :: Windows Users",
+        "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
