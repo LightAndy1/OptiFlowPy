@@ -59,7 +59,7 @@ jobs:
         timeout-minutes: 10
         run: |
           python -m pip install pyinstaller
-          pyinstaller --onefile --name OptiFlowPy --noconsole --icon=assets/icon.png src/main.py
+          pyinstaller --onefile --name OptiFlowPy.exe --noconsole --icon=assets/icon.png src/main.py
 
       - name: Set Tag
         run: echo "TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
@@ -68,6 +68,7 @@ jobs:
         if: matrix.python-version == '3.9'
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: dist/OptiFlowPy.exe
           tag_name: ${{ env.TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          name: OptiFlowPy v1.0.2
