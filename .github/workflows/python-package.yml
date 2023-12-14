@@ -44,6 +44,8 @@ jobs:
         timeout-minutes: 10
         run: |
           python -m pip install pyinstaller
+          echo "Current Directory: $(pwd)"
+          ls -al
           pyinstaller --onefile src/main.py --name OptiFlowPy1.0.1
 
       - name: Build and Publish Package
