@@ -44,9 +44,7 @@ jobs:
         timeout-minutes: 10
         run: |
           python -m pip install pyinstaller
-          echo "Current Directory: $(pwd)"
-          ls -al
-          pyinstaller --onefile src/main.py --name OptiFlowPy1.0.1
+          pyinstaller --onefile src/main.py --name OptiFlowPy
 
       - name: Build and Publish Package
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -62,7 +60,7 @@ jobs:
         if: matrix.python-version == '3.9' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/OptiFlowPy1.0.1.exe
+          files: dist/OptiFlowPy.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: v1.0.1
