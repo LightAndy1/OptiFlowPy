@@ -62,12 +62,12 @@ jobs:
           pyinstaller --onefile --name OptiFlowPy --noconsole --icon=assets/icon.png src/main.py
 
       - name: Set Tag
-        run: echo "TAG=${{ github.ref }}" >> $GITHUB_ENV
+        run: echo "TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
 
       - name: Create Release
         if: matrix.python-version == '3.9'
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/OptiFlowPy.exe
+          files: dist/*
           tag_name: ${{ env.TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
