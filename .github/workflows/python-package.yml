@@ -1,9 +1,10 @@
 name: Python Package CI
 
+permissions:
+  contents: write
+
 on:
   push:
-    tags:
-      - "v*"
     branches:
       - main
   pull_request:
