@@ -39,12 +39,12 @@ jobs:
         run: |
           python -m pytest tests/
 
-      - name: Build .exe File
-        if: matrix.python-version == '3.9'
-        timeout-minutes: 10
-        run: |
-          python -m pip install pyinstaller
-          pyinstaller --onefile --name OptiFlowPy --noconsole --icon=assets/icon.png src/main.py
+      # - name: Build .exe File
+      #   if: matrix.python-version == '3.9'
+      #   timeout-minutes: 10
+      #   run: |
+      #     python -m pip install pyinstaller
+      #     pyinstaller --onefile --name OptiFlowPy --noconsole --icon=assets/icon.png src/main.py
 
       - name: Build and Publish Package
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
