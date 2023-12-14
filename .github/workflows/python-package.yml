@@ -62,6 +62,7 @@ jobs:
           pyinstaller --onefile --name OptiFlowPy.exe --noconsole --icon=assets/icon.png src/main.py
 
       - name: Set Tag
+        if: matrix.python-version == '3.9'
         run: echo "TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
 
       - name: Create Release
