@@ -10,7 +10,7 @@ class OptiFlowPyApp:
         self.root = root
         self.root.title("OptiFlowPy")
         self.root.geometry("420x150")
-        icon_path = os.path.join("assets", "icon.png")
+        icon_path = os.path.join("../assets", "icon.png")
         if os.path.exists(icon_path):
             root.iconphoto(True, tk.PhotoImage(file=icon_path))
 
