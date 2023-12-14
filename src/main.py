@@ -45,7 +45,10 @@ class OptiFlowPyApp:
         )
         ttk.Button(
             self.root, text="Compress Images", command=self.compress_images
-        ).grid(row=3, column=1, pady=10)
+        ).grid(row=3, column=0, pady=10)
+        ttk.Button(self.root, text="Go to Folder", command=self.goto_output).grid(
+            row=3, column=2, pady=10
+        )
 
         # ^ Slider
         ttk.Scale(
@@ -56,6 +59,12 @@ class OptiFlowPyApp:
             orient="horizontal",
             length=200,
         ).grid(row=2, column=1, pady=10)
+
+    def goto_output(self):
+        if not self.output_folder_path.get():
+            messagebox.showerror("Error", "Please select an output folder.")
+            return
+        os.startfile(self.output_folder_path.get())
 
     def browse_input_folder(self):
         folder_selected = filedialog.askdirectory()
