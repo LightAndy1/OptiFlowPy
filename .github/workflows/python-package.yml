@@ -49,19 +49,8 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
 
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository -y https://cli.github.com/packages
-          sudo apt-get update
-          sudo apt-get install gh
-
-      - name: Create GitHub Release
+      - name: Create Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          TAG=$(git describe --tags --abbrev=0)
-          MESSAGE=$(git log $TAG..HEAD --oneline --no-merges)
-          echo "Creating release $TAG"
-          gh release create $TAG -t $TAG -n "$MESSAGE"
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
