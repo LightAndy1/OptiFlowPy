@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     tags:
-      - "v*"
+      - "v*.*.*"
     branches:
       - main
   pull_request:
@@ -67,4 +67,3 @@ jobs:
         with:
           files: dist/OptiFlowPy.exe
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v1.0.2
