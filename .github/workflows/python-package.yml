@@ -2,6 +2,8 @@ name: Python Package CI
 
 on:
   push:
+    tags:
+      - "v*"
     branches:
       - main
   pull_request:
