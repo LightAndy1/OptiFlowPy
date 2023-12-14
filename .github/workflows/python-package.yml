@@ -61,6 +61,9 @@ jobs:
           python -m pip install pyinstaller
           pyinstaller --onefile --name OptiFlowPy --noconsole --icon=assets/icon.png src/main.py
 
+      - name: Debug
+        run: echo "Tag ${{ github.ref }}"
+
       - name: Create Release
         if: matrix.python-version == '3.9'
         uses: softprops/action-gh-release@v1
