@@ -1,82 +1,100 @@
-from tkinter import filedialog
-from PIL import Image
 import os
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from tkinter import ttk
+from src.compressor import compress_image
 
 
-def compress_and_resize_webp(
-    input_folder, output_folder, quality=80, max_size=(200, 200)
-):
-    """
-    Compresses and resizes all .webp images in the input folder without visible quality loss
-    and saves them to the output folder.
+class OptiFlowPyApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("OptiFlowPy")
+        self.root.geometry("420x150")
+        icon_path = os.path.join("../assets", "icon.png")
+        if os.path.exists(icon_path):
+            root.iconphoto(True, tk.PhotoImage(file=icon_path))
 
-    Parameters:
-    - input_folder: The path to the folder containing input .webp files.
-    - output_folder: The path to the folder to save the compressed .webp files.
-    - quality: Compression quality (0-100), higher is better.
-    - max_size: Maximum size for resizing images (width, height).
+        self.input_folder_path = tk.StringVar()
+        self.output_folder_path = tk.StringVar()
+        self.compression_percentage = tk.DoubleVar(value=75)
 
-    Returns:
-    - None
-    """
-    try:
-        # Ensure the output folder exists
-        os.makedirs(output_folder, exist_ok=True)
+        self.create_widgets()
 
-        # Loop through all .webp files in the input folder
-        for file_name in os.listdir(input_folder):
-            if file_name.lower().endswith(".webp"):
-                input_path = os.path.join(input_folder, file_name)
-                output_path = os.path.join(output_folder, file_name)
+    def create_widgets(self):
+        # ^ Labels
+        tk.Label(self.root, text="Input Folder:").grid(row=0, column=0, sticky="e")
+        tk.Label(self.root, text="Output Folder:").grid(row=1, column=0, sticky="e")
+        tk.Label(self.root, text="Compression Percentage:").grid(
+            row=2, column=0, sticky="e"
+        )
 
-                # Open the original .webp image
-                with Image.open(input_path) as img:
-                    # Resize if the image is larger than max_size
-                    if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
-                        img = img.resize(max_size)
+        # ^ Entry Widgets
+        ttk.Entry(
+            self.root, textvariable=self.input_folder_path, state="readonly"
+        ).grid(row=0, column=1, sticky="ew")
+        ttk.Entry(
+            self.root, textvariable=self.output_folder_path, state="readonly"
+        ).grid(row=1, column=1, sticky="ew")
 
-                    # Save the compressed .webp image
-                    img.save(output_path, "webp", quality=quality)
-                    print(f"Image compressed and saved to {output_path}")
+        # ^ Buttons
+        ttk.Button(self.root, text="Browse", command=self.browse_input_folder).grid(
+            row=0, column=2
+        )
+        ttk.Button(self.root, text="Browse", command=self.browse_output_folder).grid(
+            row=1, column=2
+        )
+        ttk.Button(
+            self.root, text="Compress Images", command=self.compress_images
+        ).grid(row=3, column=0, pady=10)
+        ttk.Button(self.root, text="Go to Folder", command=self.goto_output).grid(
+            row=3, column=2, pady=10
+        )
 
-    except Exception as e:
-        print(f"Error: {e}")
+        # ^ Slider
+        ttk.Scale(
+            self.root,
+            from_=1,
+            to=100,
+            variable=self.compression_percentage,
+            orient="horizontal",
+            length=200,
+        ).grid(row=2, column=1, pady=10)
+
+    def goto_output(self):
+        if not self.output_folder_path.get():
+            messagebox.showerror("Error", "Please select an output folder.")
+            return
+        os.startfile(self.output_folder_path.get())
+
+    def browse_input_folder(self):
+        folder_selected = filedialog.askdirectory()
+        self.input_folder_path.set(folder_selected)
+
+    def browse_output_folder(self):
+        folder_selected = filedialog.askdirectory()
+        self.output_folder_path.set(folder_selected)
+
+    def compress_images(self):
+        input_folder = self.input_folder_path.get()
+        output_folder = self.output_folder_path.get()
+        compression_percentage = int(self.compression_percentage.get())
+
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+
+        try:
+            for file_name in os.listdir(input_folder):
+                if file_name.lower().endswith((".png", ".jpg", ".jpeg", ".webp")):
+                    input_path = os.path.join(input_folder, file_name)
+                    output_path = os.path.join(output_folder, file_name)
+                    compress_image(input_path, output_path, compression_percentage)
+
+            messagebox.showinfo("Success", "Image compression completed!")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
-    print(
-        "First of all, please choose an input folder where all the images are located."
-    )
-    input_folder = filedialog.askdirectory(title="Select Input Folder")
-    if input_folder == "":
-        print("Error: Input folder not found.")
-        exit()
-
-    print(
-        "Now, please select an output folder, where the compressed images will be saved."
-    )
-    output_folder = filedialog.askdirectory(title="Select Output Folder")
-    if output_folder == "":
-        print("Error: Output folder not found.")
-        exit()
-
-    compression_quality = int(input("Enter the desired quality (0-100): "))
-    if compression_quality > 100:
-        compression_quality = 100
-    elif compression_quality < 0:
-        compression_quality = 0
-
-    if input("Do you want to resize the images? (y/n): ") == "y":
-        max_size = (
-            int(input("Enter the maximum width: ")),
-            int(input("Enter the maximum height: ")),
-        )
-
-    # Check if the input folder exists
-    if os.path.exists(input_folder):
-        # Compress and resize all .webp images in the input folder
-        compress_and_resize_webp(
-            input_folder, output_folder, quality=compression_quality, max_size=max_size
-        )
-    else:
-        print("Error: Input folder not found.")
+    root = tk.Tk()
+    app = OptiFlowPyApp(root)
+    root.mainloop()
