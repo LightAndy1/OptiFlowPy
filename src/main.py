@@ -3,9 +3,7 @@ from PIL import Image
 import os
 
 
-def compress_and_resize_webp(
-    input_folder, output_folder, quality=80, max_size=(200, 200)
-):
+def compress_and_resize_webp(input_folder, output_folder, quality, max_size):
     """
     Compresses and resizes all .webp images in the input folder without visible quality loss
     and saves them to the output folder.
@@ -32,8 +30,9 @@ def compress_and_resize_webp(
                 # Open the original .webp image
                 with Image.open(input_path) as img:
                     # Resize if the image is larger than max_size
-                    if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
-                        img = img.resize(max_size)
+                    if max_size != (0, 0):
+                        if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
+                            img = img.resize(max_size)
 
                     # Save the compressed .webp image
                     img.save(output_path, "webp", quality=quality)
@@ -66,7 +65,9 @@ if __name__ == "__main__":
     elif compression_quality < 0:
         compression_quality = 0
 
-    if input("Do you want to resize the images? (y/n): ") == "y":
+    resizeAsk = input("Do you want to resize the images? (y/n): ")
+
+    if resizeAsk == "y":
         max_size = (
             int(input("Enter the maximum width: ")),
             int(input("Enter the maximum height: ")),
@@ -75,8 +76,19 @@ if __name__ == "__main__":
     # Check if the input folder exists
     if os.path.exists(input_folder):
         # Compress and resize all .webp images in the input folder
-        compress_and_resize_webp(
-            input_folder, output_folder, quality=compression_quality, max_size=max_size
-        )
+        if resizeAsk == "y":
+            compress_and_resize_webp(
+                input_folder,
+                output_folder,
+                quality=compression_quality,
+                max_size=max_size,
+            )
+        else:
+            compress_and_resize_webp(
+                input_folder,
+                output_folder,
+                quality=compression_quality,
+                max_size=(0, 0),
+            )
     else:
         print("Error: Input folder not found.")
