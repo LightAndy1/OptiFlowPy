@@ -1,7 +1,11 @@
+from tkinter import filedialog
 from PIL import Image
 import os
 
-def compress_and_resize_webp(input_folder, output_folder, quality=80, max_size=(200, 200)):
+
+def compress_and_resize_webp(
+    input_folder, output_folder, quality=80, max_size=(200, 200)
+):
     """
     Compresses and resizes all .webp images in the input folder without visible quality loss
     and saves them to the output folder.
@@ -29,29 +33,50 @@ def compress_and_resize_webp(input_folder, output_folder, quality=80, max_size=(
                 with Image.open(input_path) as img:
                     # Resize if the image is larger than max_size
                     if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
-                        img.thumbnail(max_size, Image.ANTIALIAS)
+                        img = img.resize(max_size)
 
                     # Save the compressed .webp image
-                    img.save(output_path, 'webp', quality=quality)
+                    img.save(output_path, "webp", quality=quality)
                     print(f"Image compressed and saved to {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
 
+
 if __name__ == "__main__":
-    # Replace 'input_folder' and 'output_folder' with your folder paths
-    input_folder = 'input-images'
-    output_folder = 'output-images'
+    print(
+        "First of all, please choose an input folder where all the images are located."
+    )
+    input_folder = filedialog.askdirectory(title="Select Input Folder")
+    if input_folder == "":
+        print("Error: Input folder not found.")
+        exit()
 
-    # Set the desired quality (0-100)
-    compression_quality = 75
+    print(
+        "Now, please select an output folder, where the compressed images will be saved."
+    )
+    output_folder = filedialog.askdirectory(title="Select Output Folder")
+    if output_folder == "":
+        print("Error: Output folder not found.")
+        exit()
 
-    # Set the maximum size for resizing images
-    max_size = (200, 200)
+    compression_quality = int(input("Enter the desired quality (0-100): "))
+    if compression_quality > 100:
+        compression_quality = 100
+    elif compression_quality < 0:
+        compression_quality = 0
+
+    if input("Do you want to resize the images? (y/n): ") == "y":
+        max_size = (
+            int(input("Enter the maximum width: ")),
+            int(input("Enter the maximum height: ")),
+        )
 
     # Check if the input folder exists
     if os.path.exists(input_folder):
         # Compress and resize all .webp images in the input folder
-        compress_and_resize_webp(input_folder, output_folder, quality=compression_quality, max_size=max_size)
+        compress_and_resize_webp(
+            input_folder, output_folder, quality=compression_quality, max_size=max_size
+        )
     else:
         print("Error: Input folder not found.")
